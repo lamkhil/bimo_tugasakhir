@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "298255060366",
+    "project_id": "bimo-tugasakhir",
+    "storage_bucket": "bimo-tugasakhir.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298255060366:android:e51f317a64991f6ff568df",
+        "android_client_info": {
+          "package_name": "com.bimo.tugasakhir"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298255060366-ifqdusk6hu575kalsnoet4k0rqctmbjl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3QNL-iqyCPa_ug1Y9vobJULbXsEYzfug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298255060366-ifqdusk6hu575kalsnoet4k0rqctmbjl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
