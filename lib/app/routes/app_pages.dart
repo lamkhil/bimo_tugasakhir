@@ -25,9 +25,12 @@ class AppPages {
 
   static String get INITIAL {
     if (sharedPreferences.getString('user') != null) {
-      Future.delayed(Duration.zero).then((value) =>
+      Future.delayed(Duration.zero).then((value) {
+        if (Get.find<AppController>().user.value == null) {
           Get.find<AppController>().user.value =
-              User.fromMap(json.decode(sharedPreferences.getString('user')!)));
+              User.fromMap(json.decode(sharedPreferences.getString('user')!));
+        }
+      });
       return Routes.BANDARA_FORM;
     }
     return Routes.LOGIN;

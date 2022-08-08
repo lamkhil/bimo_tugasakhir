@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:tugasakhir/app/data/user_service.dart';
 import 'package:tugasakhir/app/modules/bandara_form/controllers/bandara_form_controller.dart';
 
 class LaporanService {
@@ -10,6 +11,8 @@ class LaporanService {
         .collection('$kelasBandara-$namaBandara')
         .doc(data['created_at'].toString().replaceAll('/', '-'))
         .set(data);
+    UserService.addNotif('admin',
+        'Laporan ${data['created_at'].toString().replaceAll('/', '-')} telah ditambahkan');
   }
 
   static Future<QuerySnapshot<Map<String, dynamic>>> getLaporan() async {
@@ -31,5 +34,8 @@ class LaporanService {
         }
       }
     }, SetOptions(merge: true));
+
+    UserService.addNotif('user',
+        'Laporan perbaikan ${created_at.replaceAll('/', '-')} telah disetujui');
   }
 }

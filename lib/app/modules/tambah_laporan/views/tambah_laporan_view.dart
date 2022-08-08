@@ -13,7 +13,8 @@ class TambahLaporanView extends GetView<TambahLaporanController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Tambah Laporan'),
+          title: Text(
+              '${controller.arguments != null ? 'Edit' : 'Tambah'} Laporan'),
         ),
         body: SingleChildScrollView(
           child: Form(

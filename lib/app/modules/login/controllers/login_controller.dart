@@ -23,6 +23,7 @@ class LoginController extends GetxController {
         final result = await UserService.login(
             usernameController.text.toLowerCase(), passwordController.text);
         if (result != null) {
+          Get.find<AppController>().user.value = result;
           Get.offAllNamed(Routes.BANDARA_FORM);
         } else {
           Get.back();

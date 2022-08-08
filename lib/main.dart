@@ -9,8 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tugasakhir/app/global/bindings/app_binding.dart';
 import 'package:tugasakhir/firebase_options.dart';
 
-import 'app/data/model/user.dart';
-import 'app/global/controllers/app_controller.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'app/routes/app_pages.dart';
 
 const Map<int, Color> colorCodes = {
@@ -29,6 +28,7 @@ late final SharedPreferences sharedPreferences;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  timeago.setLocaleMessages('id', timeago.IdMessages());
   sharedPreferences = await SharedPreferences.getInstance();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());

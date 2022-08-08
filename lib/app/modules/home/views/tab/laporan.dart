@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tugasakhir/app/global/controllers/app_controller.dart';
 import 'package:tugasakhir/app/modules/home/controllers/tab/laporan_controller.dart';
 import 'package:tugasakhir/app/routes/app_pages.dart';
 
@@ -12,12 +13,15 @@ class LaporanTab extends GetView<LaporanController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
-        onPressed: () => Get.toNamed(Routes.TAMBAH_LAPORAN,
-            arguments: controller.selectedData.value),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton:
+          Get.find<AppController>().user.value!.username == "admin"
+              ? null
+              : FloatingActionButton(
+                  backgroundColor: Colors.amber,
+                  onPressed: () => Get.toNamed(Routes.TAMBAH_LAPORAN,
+                      arguments: controller.selectedData.value),
+                  child: const Icon(Icons.add),
+                ),
       body: Column(
         children: [
           Container(

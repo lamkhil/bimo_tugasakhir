@@ -39,36 +39,49 @@ class BandaraFormView extends GetView<BandaraFormController> {
                       ),
                       Container(
                         margin: const EdgeInsets.all(10),
-                        child: TextFormField(
-                          controller: controller.kelasBandaraController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              hintText: 'Kelas Bandara'),
-                          // The validator receives the text that the user has entered.
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            return null;
-                          },
+                        child: Obx(
+                          () => DropdownButton<int?>(
+                              isExpanded: true,
+                              hint: const Text("Kelas Bandara"),
+                              value: controller.selectedKelas.value,
+                              items: controller.kelas
+                                  .map((e) => DropdownMenuItem(
+                                      value: controller.kelas.indexOf(e),
+                                      child: Text(
+                                        e,
+                                        overflow: TextOverflow.ellipsis,
+                                      )))
+                                  .toList(),
+                              onChanged: (val) {
+                                controller.selectedKelas.value = val;
+                              }),
                         ),
                       ),
+
                       Container(
-                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                        child: TextFormField(
-                          controller: controller.namaBandaraController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              hintText: 'Nama Bandara'),
-                          // The validator receives the text that the user has entered.
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            return null;
-                          },
+                        margin: const EdgeInsets.all(10),
+                        child: Obx(
+                          () => DropdownButton<int?>(
+                              isExpanded: true,
+                              hint: const Text("Nama Bandara"),
+                              value: controller.selectedBandara.value,
+                              items: controller
+                                  .bandara[controller.selectedKelas.value ?? 0]
+                                  .map((e) => DropdownMenuItem(
+                                      value: controller.bandara[
+                                              controller.selectedKelas.value ??
+                                                  0]
+                                          .indexOf(e),
+                                      child: Text(
+                                        e,
+                                        overflow: TextOverflow.ellipsis,
+                                      )))
+                                  .toList(),
+                              onChanged: controller.selectedKelas.value == null
+                                  ? null
+                                  : (val) {
+                                      controller.selectedBandara.value = val;
+                                    }),
                         ),
                       ),
                       Container(

@@ -14,4 +14,12 @@ class AppController extends GetxController {
     final result = await LaporanService.getLaporan();
     data.value = result;
   }
+
+  @override
+  void onInit() {
+    user.listen((p0) {
+      print(p0?.notif);
+    });
+    super.onInit();
+  }
 }
