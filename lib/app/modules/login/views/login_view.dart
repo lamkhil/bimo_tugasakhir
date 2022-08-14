@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tugasakhir/app/routes/app_pages.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -72,15 +73,37 @@ class LoginView extends GetView<LoginController> {
                           },
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            controller.login();
-                          },
-                          child: const Text('Login'),
-                        ),
-                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                controller.login();
+                              },
+                              child: const Text('Login'),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                side: const BorderSide(color: Colors.black),
+                                elevation: 2,
+                              ),
+                              onPressed: () async {
+                                Get.toNamed(Routes.REGISTER);
+                              },
+                              child: const Text(
+                                'Register',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                       // Add TextFormFields and ElevatedButton here.
                     ],
                   ),

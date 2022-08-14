@@ -25,9 +25,6 @@ class LoginController extends GetxController {
         if (result != null) {
           Get.find<AppController>().user.value = result;
           Get.offAllNamed(Routes.BANDARA_FORM);
-        } else {
-          Get.back();
-          Get.snackbar("Oops!", "Username / password salah");
         }
       } catch (e) {
         Get.back();

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tugasakhir/app/data/model/laporan.dart';
 
+import '../../../global/controllers/app_controller.dart';
 import '../controllers/tambah_laporan_controller.dart';
 
 class TambahLaporanView extends GetView<TambahLaporanController> {
@@ -14,193 +15,228 @@ class TambahLaporanView extends GetView<TambahLaporanController> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-              '${controller.arguments != null ? 'Edit' : 'Tambah'} Laporan'),
+              '${controller.arguments != null ? Get.find<AppController>().user.value!.username == 'admin' ? 'Persetujuan' : 'Edit' : 'Tambah'} Laporan'),
         ),
         body: SingleChildScrollView(
-          child: Form(
-            key: controller.formKey,
-            child: Container(
-              margin: EdgeInsets.all(15.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    DateFormat('EEEE').format(controller.arguments != null
-                        ? DateFormat('dd/MM/yyyy')
-                            .parse(controller.data['created_at'])
-                        : DateTime.now()),
-                    style:
-                        TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    DateFormat('d MMM yyyy').format(controller.arguments != null
-                        ? DateFormat('dd/MM/yyyy')
-                            .parse(controller.data['created_at'])
-                        : DateTime.now()),
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                    ),
-                  ),
-                  Container(
+          child: Column(
+            children: [
+              AbsorbPointer(
+                absorbing:
+                    Get.find<AppController>().user.value!.username == 'admin',
+                child: Form(
+                  key: controller.formKey,
+                  child: Container(
                     margin: EdgeInsets.all(15.r),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Petugas'),
-                          TextFormField(
-                            controller: controller.petugasController,
-                            validator: (val) {
-                              if (val?.isEmpty ?? true) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          DateFormat('EEEE').format(controller.arguments != null
+                              ? DateFormat('dd/MM/yyyy')
+                                  .parse(controller.data['created_at'])
+                              : DateTime.now()),
+                          style: TextStyle(
+                              fontSize: 24.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          DateFormat('d MMM yyyy').format(
+                              controller.arguments != null
+                                  ? DateFormat('dd/MM/yyyy')
+                                      .parse(controller.data['created_at'])
+                                  : DateTime.now()),
+                          style: TextStyle(
+                            fontSize: 24.sp,
                           ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            child: const Text('Cuaca'),
-                          ),
-                          TextFormField(
-                            controller: controller.cuacaController,
-                            validator: (val) {
-                              if (val?.isEmpty ?? true) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
-                          )
-                        ]),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(15.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Petugas'),
+                                TextFormField(
+                                  controller: controller.petugasController,
+                                  validator: (val) {
+                                    if (val?.isEmpty ?? true) {
+                                      return 'Required';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  child: const Text('Cuaca'),
+                                ),
+                                TextFormField(
+                                  controller: controller.cuacaController,
+                                  validator: (val) {
+                                    if (val?.isEmpty ?? true) {
+                                      return 'Required';
+                                    }
+                                    return null;
+                                  },
+                                )
+                              ]),
+                        ),
+                        Text(
+                          'Runway',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(12.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: runway
+                                  .map((e) => Obx(() =>
+                                      controller.data['runway'][e]['status'] ==
+                                              'rusak'
+                                          ? rusak(e, 'runway')
+                                          : baik(e, 'runway')))
+                                  .toList()),
+                        ),
+                        Text(
+                          'Runway Strip',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(12.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: runwayStrip
+                                  .map((e) => Obx(() =>
+                                      controller.data['runwayStrip'][e]
+                                                  ['status'] ==
+                                              'rusak'
+                                          ? rusak(e, 'runwayStrip')
+                                          : baik(e, 'runwayStrip')))
+                                  .toList()),
+                        ),
+                        Text(
+                          'Taxiway',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(12.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: taxiway
+                                  .map((e) => Obx(() =>
+                                      controller.data['taxiway'][e]['status'] ==
+                                              'rusak'
+                                          ? rusak(e, 'taxiway')
+                                          : baik(e, 'taxiway')))
+                                  .toList()),
+                        ),
+                        Text(
+                          'Apron',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(12.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: apron
+                                  .map((e) => Obx(() => controller.data['apron']
+                                              [e]['status'] ==
+                                          'rusak'
+                                      ? rusak(e, 'apron')
+                                      : baik(e, 'apron')))
+                                  .toList()),
+                        ),
+                        Text(
+                          'Drainase',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(12.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: drainase
+                                  .map((e) => Obx(() => controller
+                                              .data['drainase'][e]['status'] ==
+                                          'rusak'
+                                      ? rusak(e, 'drainase')
+                                      : baik(e, 'drainase')))
+                                  .toList()),
+                        ),
+                        Text(
+                          'Pagar Perimeter',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(12.r),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: pagarPerimeter
+                                  .map((e) => Obx(() =>
+                                      controller.data['pagarPerimeter'][e]
+                                                  ['status'] ==
+                                              'rusak'
+                                          ? rusak(e, 'pagarPerimeter')
+                                          : baik(e, 'pagarPerimeter')))
+                                  .toList()),
+                        ),
+                      ],
+                    ),
                   ),
-                  Text(
-                    'Runway',
-                    style:
-                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(12.r),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: runway
-                            .map((e) => Obx(() => controller.data['runway'][e]
-                                        ['status'] ==
-                                    'rusak'
-                                ? rusak(e, 'runway')
-                                : baik(e, 'runway')))
-                            .toList()),
-                  ),
-                  Text(
-                    'Runway Strip',
-                    style:
-                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(12.r),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: runwayStrip
-                            .map((e) => Obx(() => controller.data['runwayStrip']
-                                        [e]['status'] ==
-                                    'rusak'
-                                ? rusak(e, 'runwayStrip')
-                                : baik(e, 'runwayStrip')))
-                            .toList()),
-                  ),
-                  Text(
-                    'Taxiway',
-                    style:
-                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(12.r),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: taxiway
-                            .map((e) => Obx(() => controller.data['taxiway'][e]
-                                        ['status'] ==
-                                    'rusak'
-                                ? rusak(e, 'taxiway')
-                                : baik(e, 'taxiway')))
-                            .toList()),
-                  ),
-                  Text(
-                    'Apron',
-                    style:
-                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(12.r),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: apron
-                            .map((e) => Obx(() =>
-                                controller.data['apron'][e]['status'] == 'rusak'
-                                    ? rusak(e, 'apron')
-                                    : baik(e, 'apron')))
-                            .toList()),
-                  ),
-                  Text(
-                    'Drainase',
-                    style:
-                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(12.r),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: drainase
-                            .map((e) => Obx(() => controller.data['drainase'][e]
-                                        ['status'] ==
-                                    'rusak'
-                                ? rusak(e, 'drainase')
-                                : baik(e, 'drainase')))
-                            .toList()),
-                  ),
-                  Text(
-                    'Pagar Perimeter',
-                    style:
-                        TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(12.r),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: pagarPerimeter
-                            .map((e) => Obx(() => controller
-                                        .data['pagarPerimeter'][e]['status'] ==
-                                    'rusak'
-                                ? rusak(e, 'pagarPerimeter')
-                                : baik(e, 'pagarPerimeter')))
-                            .toList()),
-                  ),
-                  SizedBox(
-                    height: 24.h,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.amber),
-                            onPressed: () {
-                              controller.cetak();
-                            },
-                            child: const Text("Cetak")),
-                      ),
-                      SizedBox(
-                        width: 24.w,
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                            onPressed: () {
-                              controller.simpan();
-                            },
-                            child: const Text("Simpan")),
-                      )
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
+              (controller.data['accept'] ?? false)
+                  ? const Text(
+                      "LAPORAN DISETUJUI",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : const SizedBox.shrink(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                          style:
+                              ElevatedButton.styleFrom(primary: Colors.amber),
+                          onPressed: () {
+                            controller.cetak();
+                          },
+                          child: const Text("Cetak")),
+                    ),
+                    SizedBox(
+                      width: (controller.data['accept'] ?? false) ? 0 : 24.w,
+                    ),
+                    (controller.data['accept'] ?? false)
+                        ? const SizedBox.shrink()
+                        : Expanded(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  if (Get.find<AppController>()
+                                          .user
+                                          .value!
+                                          .username ==
+                                      'admin') {
+                                    controller.accept();
+                                  } else {
+                                    controller.simpan();
+                                  }
+                                },
+                                child: Text(Get.find<AppController>()
+                                            .user
+                                            .value!
+                                            .username ==
+                                        'admin'
+                                    ? "Setujui"
+                                    : "Simpan")),
+                          )
+                  ],
+                ),
+              ),
+            ],
           ),
         ));
   }

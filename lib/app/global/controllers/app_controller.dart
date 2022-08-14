@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:tugasakhir/app/data/model/user.dart';
+import 'package:tugasakhir/app/data/user_service.dart';
 
 import '../../data/laporan_service.dart';
 import '../widgets/loading.dart';
@@ -13,13 +14,6 @@ class AppController extends GetxController {
   Future<void> getData() async {
     final result = await LaporanService.getLaporan();
     data.value = result;
-  }
-
-  @override
-  void onInit() {
-    user.listen((p0) {
-      print(p0?.notif);
-    });
-    super.onInit();
+    UserService.refresh();
   }
 }

@@ -21,6 +21,7 @@ class RegisterController extends GetxController {
             passwordController.text, usernameController.text.toLowerCase());
         if (result != null) {
           Get.back();
+          Get.back();
           Get.snackbar("Sukses!", "Berhasil Registrasi");
         } else {
           Get.back();

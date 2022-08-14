@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:better_open_file/better_open_file.dart';
 import 'package:excel/excel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,6 +15,7 @@ import 'package:tugasakhir/app/data/laporan_service.dart';
 import 'package:tugasakhir/app/global/const.dart';
 import 'package:tugasakhir/app/global/controllers/app_controller.dart';
 import 'package:tugasakhir/app/global/widgets/loading.dart';
+import 'package:tugasakhir/app/modules/tambah_laporan/controllers/pdf.dart';
 
 import '../../../data/model/laporan.dart';
 import '../../bandara_form/controllers/bandara_form_controller.dart';
@@ -152,9 +154,10 @@ class TambahLaporanController extends GetxController {
         LoadingDialog.basic();
         data['petugas'] = petugasController.text;
         data['cuaca'] = cuacaController.text;
-        log(data.toString());
+        data['accept'] = false;
         await LaporanService.saveLaporan(data);
         await Get.find<AppController>().getData();
+        Get.back();
         Get.back();
       } catch (e) {
         Get.back();
@@ -164,6 +167,39 @@ class TambahLaporanController extends GetxController {
   }
 
   Future<void> cetak() async {
+    Get.bottomSheet(Container(
+      width: double.infinity,
+      height: 150.h,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24.r), topRight: Radius.circular(24.r))),
+      padding: EdgeInsets.all(12.r),
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.table_view),
+            title: const Text("Cetak excel"),
+            onTap: () async {
+              Get.back();
+              await excel();
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.picture_as_pdf),
+            title: const Text("Cetak pdf"),
+            onTap: () async {
+              Get.back();
+              await pdf();
+            },
+          ),
+        ],
+      ),
+    ));
+  }
+
+  Future<void> excel() async {
     var column = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
     var directory = Directory('');
     final date = DateFormat('dd/MM/yyyy').parse(data['created_at']);
@@ -259,16 +295,19 @@ class TambahLaporanController extends GetxController {
             ..createSync(recursive: true)
             ..writeAsBytesSync(excel.encode()!);
           Navigator.pop(Get.overlayContext!);
-          Get.snackbar("Success", "Berhasil simpan laporan\n$path");
+          Get.snackbar("Success", "Berhasil simpan laporan\n$path",
+              backgroundColor: Colors.green, colorText: Colors.white);
         } else {
           await directory.create(recursive: true);
           File((path))
             ..createSync(recursive: true)
             ..writeAsBytesSync(excel.encode()!);
           Get.back();
-          Get.snackbar("Oops!", "Berhasil simpan laporan\n$path");
+          Get.snackbar("Oops!", "Berhasil simpan laporan\n$path",
+              backgroundColor: Colors.green, colorText: Colors.white);
         }
-        OpenFile.open(path);
+        final open = await OpenFile.open(path);
+        print(open.message);
       } else {
         Get.back();
         Get.snackbar("Oops!", "Izin Penyimpanan ditolak");
@@ -283,5 +322,23 @@ class TambahLaporanController extends GetxController {
     petugasController.dispose();
     cuacaController.dispose();
     super.dispose();
+  }
+
+  Future<void> accept() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        LoadingDialog.basic();
+        data['petugas'] = petugasController.text;
+        data['cuaca'] = cuacaController.text;
+        data['accept'] = true;
+        await LaporanService.accLaporanAll(data);
+        await Get.find<AppController>().getData();
+        Get.back();
+        Get.back();
+      } catch (e) {
+        Get.back();
+        Get.snackbar("Oops!", e.toString());
+      }
+    }
   }
 }
